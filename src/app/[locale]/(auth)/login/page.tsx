@@ -1,97 +1,126 @@
-"use client";
+'use client';
 
-import { Button } from "@/shared/components/shadcn/ui/button";
+import { Button } from '@/components/shadcn/ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/shared/components/shadcn/ui/card";
-import { signIn } from "next-auth/react";
-import { useRouter } from "@/libs/next-intl";
-import { ROUTES } from "@/routes";
+} from '@/components/shadcn/ui/card';
+import { signIn } from 'next-auth/react';
+import { Link, useRouter } from '@/libs/next-intl';
+import { ROUTES } from '@/routes';
+import { Input } from '@/components/shadcn/ui/input';
+import { Label } from '@radix-ui/react-label';
 
 export const description =
   "A login form with email and password. There's an option to login with Google and a link to sign up if you don't have an account.";
 
-const LoginForm = () => {
+const LoginPage = () => {
   const router = useRouter();
 
   const handleGuestLogin = async () => {
-    const result = await signIn("credentials", {
+    const result = await signIn('credentials', {
       redirect: false,
-      username: "guest", // Use a designated username for guest login
-      password: "guest", // Use a designated password for guest login
+      email: 'guest', // Use a designated username for guest login
+      password: 'guest', // Use a designated password for guest login
     });
 
     if (result?.error) {
       // eslint-disable-next-line no-console
-      console.error("Guest login error: ", result.error);
+      console.error('Guest login error: ', result.error);
     } else {
       // eslint-disable-next-line no-console
-      console.log("Guest login successful", result);
+      console.log('Guest login successful', result);
       router.push(ROUTES.DASHBOARD);
     }
   };
 
   const handleGoogleSignIn = async () => {
-    await signIn("google");
+    const result = await signIn('google', { callbackUrl: ROUTES.DASHBOARD });
+
+    if (result?.error) {
+      // Handle error, show error message to the user
+      // setError("Invalid credentials. Please try again.");
+    } else {
+      // If successful, redirect to the desired page
+      router.push(ROUTES.DASHBOARD);
+    }
+  };
+
+  const handleCredentialSignIn = async (email: string, password: string) => {
+    const result = await signIn('credentials', {
+      redirect: false, // We control the redirection manually
+      email,
+      password,
+    });
+
+    if (result?.error) {
+      // Handle error, show error message to the user
+      // setError("Invalid credentials. Please try again.");
+    } else {
+      // If successful, redirect to the desired page
+      router.push(ROUTES.DASHBOARD);
+    }
   };
 
   return (
-    <Card className="mx-auto max-w-sm">
+    <Card className='mx-auto max-w-sm'>
       <CardHeader>
-        <CardTitle className="text-2xl">Login</CardTitle>
-        <CardDescription>
-          Select your login method below
-        </CardDescription>
+        <CardTitle className='text-2xl'>Login</CardTitle>
+        <CardDescription>Select your login method below</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="grid gap-4">
-          {/* TODO: TD-001 Implement entire flow of credential provider from registration to authentication */}
-          {/* <div className="grid gap-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="m@example.com"
-              required
-            />
-          </div>
-          <div className="grid gap-2">
-            <div className="flex items-center">
-              <Label htmlFor="password">Password</Label>
-              <Link href="#" className="ml-auto inline-block text-sm underline">
-                Forgot your password?
+        <div className='grid gap-4'>
+          <div className='grid gap-2'>
+            <div className='flex items-center'>
+              <Label htmlFor='email'>Email</Label>
+              <Link className='ml-auto inline-block text-sm underline' href={ROUTES.REGISTRATION}>
+               Register?
               </Link>
             </div>
-            <Input id="password" type="password" required />
+
+            <Input
+              required
+              id='email'
+              placeholder='m@example.com'
+              type='email'
+            />
+          </div>
+          <div className='grid gap-2'>
+            <Label htmlFor='password'>Password</Label>
+
+            <Input required id='password' type='password' />
           </div>
           <Button
-            type="submit"
-            className="w-full"
-            onClick={undefined}
+            className='w-full'
+            type='submit'
+            onClick={() => handleCredentialSignIn}
           >
             Login
-          </Button> */}
+          </Button>
           <div>
-            <Button className="w-full" variant="outline" onClick={() => handleGoogleSignIn()}>
+            <Button
+              className='w-full'
+              variant='outline'
+              onClick={() => handleGoogleSignIn()}
+            >
               Login with Google
             </Button>
-            <div className="mt-2 text-center text-sm text-red-500">
-              * To use the app as full-stack app with google login, database and env are required to be set up.
-            </div>
           </div>
         </div>
-        <div className="mt-4 text-center text-sm">
-          or using local storage and client store instead,
-          <div className="underline cursor-pointer font-semibold" onClick={() => handleGuestLogin()}>
-            Sign in as a guest.
+        <div className='mt-4 text-center text-sm'>
+          To use local storage and client store instead,
+          <div
+            className='underline cursor-pointer font-semibold'
+            onClick={() => handleGuestLogin()}
+          >
+            Login as a guest.
           </div>
         </div>
       </CardContent>
     </Card>
   );
-}
-export default LoginForm
+};
+export default LoginPage;

@@ -1,13 +1,14 @@
+/* eslint-disable complexity */
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import {
   getServerSession,
-  type DefaultSession,
   type NextAuthOptions,
 } from "next-auth";
 import { type Adapter } from "next-auth/adapters";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 
+import { api } from "@/libs/trpc/server";
 import { env } from "@/env";
 import { db } from "@/server/db";
 
@@ -25,12 +26,14 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       // If user object is present, add user info to the token
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (user) {
         token.id = user.id;
         token.name = user.name
         token.email = user.email
         token.isGuest = user.isGuest || false; // Set the isGuest flag
       }
+
       return token;
     },
     session: ({ session, user }) => ({
@@ -53,12 +56,16 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        username: { label: "Username", type: "text", placeholder: "Enter your username" },
+        email: { label: "Email", type: "email", placeholder: "Enter your email" },
         password: { label: "Password", type: "password", placeholder: "Enter your password" },
       },
       async authorize(credentials) {
-        // Check if the credentials indicate a guest login
-        if (credentials?.username === "guest" && credentials?.password === "guest") {
+        if (!credentials?.email || !credentials.password) {
+            throw new Error("Missing credentials");
+        }
+
+        // Check if the credentials indicate a guest signin
+        if (credentials.email === "guest" && credentials.password === "guest") {
           // Simulate guest user creation
           const guestUser = {
             id: 'guest-user-id', // Unique identifier for the guest user
@@ -66,20 +73,18 @@ export const authOptions: NextAuthOptions = {
             email: 'guest@example.com',
             isGuest: true, // Mark user as a guest
           };
+
           return guestUser; // Return guest user object
         }
 
-        // TODO: TD-001 Implement entire flow of credential provider from registration to authentication
-        // // Your existing user authentication logic goes here...
-        // // For example, lookup user in the database:
-        // const user = await db.user.findUnique({
-        //   where: { username: credentials.username },
-        // });
+        const data = await api.auth.signin({
+          email: credentials.email,
+          password: credentials.password
+        })
 
-        // // If user found and password matches, return the user object
-        // if (user && (await verifyPassword(credentials.password, user.password))) {
-        //   return user;
-        // }
+      if (data.user) {
+        return data.user;
+      }
 
         return null; // Return null if authentication fails
       },

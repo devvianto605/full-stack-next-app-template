@@ -20,7 +20,6 @@
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "jsx": "preserve",
-    "plugins": [{ "name": "next" }],
     "incremental": true,
 
     /* Path Aliases */
@@ -29,10 +28,6 @@
       "@/*": ["./src/*"],
       "@/assets/*": ["./public/assets/*"]
     },
-    "types": [
-      "@types/jest",
-      "@testing-library/jest-dom"
-    ],
     "plugins": [
       {
         "name": "next"
@@ -47,7 +42,7 @@
     "**/*.cjs",
     "**/*.js",
     ".next/types/**/*.ts",
-    "@types/**/*"
+    "types/next-auth.d.ts"
   ],
   "exclude": ["node_modules"]
 }
