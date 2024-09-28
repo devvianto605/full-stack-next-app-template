@@ -1,10 +1,29 @@
-import { FormField, FormItem, FormLabel, FormControl, FormDescription, FormMessage } from "@/shared/components/shadcn/ui/form";
-import { Input, type InputProps } from "@/shared/components/shadcn/ui/input";
-import React from "react";
-import { useFormContext } from "react-hook-form";
-type CustomInputProps = { name: string; placeholder: string } & InputProps;
+import {
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormDescription,
+  FormMessage,
+} from '@/components/shadcn/ui/form';
+import { Input, type InputProps } from '@/components/shadcn/ui/input';
+import React from 'react';
+import { useFormContext } from 'react-hook-form';
 
-export const CustomInput = ({ name, placeholder, ...rest }: CustomInputProps): JSX.Element => {
+type CustomInputProps = {
+  name: string;
+  placeholder?: string;
+  label?: string;
+  description?: string;
+} & InputProps;
+
+export const CustomInput = ({
+  name,
+  placeholder,
+  label,
+  description,
+  ...rest
+}: CustomInputProps): JSX.Element => {
   const {
     control,
     formState: { isSubmitting },
@@ -16,11 +35,16 @@ export const CustomInput = ({ name, placeholder, ...rest }: CustomInputProps): J
       name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Custom Input</FormLabel>
+          {label && <FormLabel>{label}</FormLabel>}
           <FormControl>
-            <Input placeholder={placeholder} {...rest} {...field} disabled={isSubmitting} />
+            <Input
+              placeholder={placeholder}
+              {...rest}
+              {...field}
+              disabled={isSubmitting || rest.disabled}
+            />
           </FormControl>
-          <FormDescription>This is custom input prototype.</FormDescription>
+          {description && <FormDescription>{description}</FormDescription>}
           <FormMessage />
         </FormItem>
       )}

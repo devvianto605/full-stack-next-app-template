@@ -3,8 +3,8 @@ import {
     CommandItem,
     CommandList,
     CommandInput,
-  } from "@/shared/components/shadcn/ui/command"
-  import { Skeleton } from "@/shared/components/shadcn/ui/skeleton"
+  } from "@/components/shadcn/ui/command"
+  import { Skeleton } from "@/components/shadcn/ui/skeleton"
   import { Command as CommandPrimitive } from "cmdk"
   import { useState, useRef, useCallback, type KeyboardEvent } from "react"
   

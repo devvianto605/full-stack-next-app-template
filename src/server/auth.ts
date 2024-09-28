@@ -7,10 +7,10 @@ import {
 import { type Adapter } from "next-auth/adapters";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-
-import { api } from "@/libs/trpc/server";
 import { env } from "@/env";
 import { db } from "@/server/db";
+import { createCaller } from "@/server/api/root";
+import { createTRPCContext } from "@/server/api/trpc";
 
 /**
  * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
@@ -50,8 +50,8 @@ export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(db) as Adapter,
   providers: [
     GoogleProvider({
-      clientId: env.GOOGLE_CLIENT_ID,
-      clientSecret: env.GOOGLE_CLIENT_SECRET,
+      clientId: env.GOOGLE_CLIENT_ID || '',
+      clientSecret: env.GOOGLE_CLIENT_SECRET || '',
     }),
     CredentialsProvider({
       name: "Credentials",
@@ -59,7 +59,7 @@ export const authOptions: NextAuthOptions = {
         email: { label: "Email", type: "email", placeholder: "Enter your email" },
         password: { label: "Password", type: "password", placeholder: "Enter your password" },
       },
-      async authorize(credentials) {
+      async authorize(credentials, req) {
         if (!credentials?.email || !credentials.password) {
             throw new Error("Missing credentials");
         }
@@ -77,13 +77,18 @@ export const authOptions: NextAuthOptions = {
           return guestUser; // Return guest user object
         }
 
-        const data = await api.auth.signin({
+        const innerCaller = createCaller(await createTRPCContext({ headers: req.headers as Headers}));
+
+        const data = await innerCaller.auth.signin({
           email: credentials.email,
           password: credentials.password
         })
 
       if (data.user) {
-        return data.user;
+        return {
+          ...data.user,
+          isGuest: false
+        };
       }
 
         return null; // Return null if authentication fails

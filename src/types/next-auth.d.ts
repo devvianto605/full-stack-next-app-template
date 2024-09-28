@@ -1,24 +1,27 @@
 /* eslint-disable @typescript-eslint/consistent-type-definitions */
-import type { DefaultSession } from "next-auth";
-import type { DefaultJWT } from "@auth/core/jwt";
+import type { DefaultSession, DefaultUser } from "next-auth";
+import type { DefaultJWT } from "next-auth/jwt";
 
+// Extending the NextAuth module
 declare module "next-auth" {
-
-  // Extend session to hold the access_token
-  interface Session extends DefaultSession {
+  interface Session {
     user: {
       id: string;
       isGuest: boolean;
-      // Add more properties if needed
-    }
+    } & DefaultSession["user"];
   }
 
-  // Extend token to hold the access_token before it gets put into session
-  interface JWT extends DefaultJWT {
+  interface User extends DefaultUser {
+    id: string;
+    isGuest: boolean;
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
     user: {
       id: string;
       isGuest: boolean;
-      // Add more properties if needed
-    }
+    } & DefaultJWT;
   }
 }

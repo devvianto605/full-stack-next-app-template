@@ -10,7 +10,8 @@
     "db:push": "prisma db push",
     "db:studio": "prisma studio",
     "dev": "next dev",
-    "postinstall": "prisma generate",
+    "postinstall": "prisma generate && ./scripts/create-env.sh",
+    "start-database": "./scripts/start-database.sh",
     "lint": "next lint",
     "pre:commit": "npm run lint",
     "start": "next start"
@@ -22,6 +23,7 @@
     "@radix-ui/react-dialog": "^1.1.1",
     "@radix-ui/react-label": "^2.1.0",
     "@radix-ui/react-popover": "^1.1.1",
+    "@radix-ui/react-separator": "^1.1.0",
     "@radix-ui/react-slot": "^1.1.0",
     "@t3-oss/env-nextjs": "^0.10.1",
     "@tanstack/react-query": "^5.39.0",
