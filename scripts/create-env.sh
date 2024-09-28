@@ -14,7 +14,7 @@ else
 fi
 
 
-DB_CONTAINER_NAME="full-stack-weather-app-nextjs-postgres"
+DB_CONTAINER_NAME="full-stack-next-app-postgres"
 
 # Check if Docker is installed by looking for the 'docker' command in the system.
 if ! [ -x "$(command -v docker)" ]; then

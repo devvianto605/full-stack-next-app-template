@@ -45,7 +45,7 @@ Ensure you have the following installed on your machine:
     # Prisma (Optional)
     # https://www.prisma.io/docs/reference/database-reference/connection-urls#env
     # Mock database password is set to '12345678'
-    # DATABASE_URL="postgresql://postgres:12345678@localhost:5432/full-stack-weather-app-nextjs"
+    # DATABASE_URL="postgresql://postgres:12345678@localhost:5432/full-stack-next-app"
 
     # Next Auth Google Provider (Optional)
     #GOOGLE_CLIENT_ID="google-client-id"

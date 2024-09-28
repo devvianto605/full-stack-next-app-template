@@ -1,5 +1,5 @@
 {
-  "name": "full-stack-weather-app-nextjs",
+  "name": "full-stack-next-app",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -77,5 +77,6 @@
   "ct3aMetadata": {
     "initVersion": "1.6.0"
   },
-  "packageManager": "npm@10.8.1"
+  "packageManager": "npm@10.8.1",
+  "author": "Korawit Chukamnoet - dvvianto605.info"
 }
