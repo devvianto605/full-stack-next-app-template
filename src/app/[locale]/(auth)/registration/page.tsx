@@ -1,68 +1,106 @@
-import { Button } from "@/components/shadcn/ui/button"
+'use client';
+
+/* eslint-disable react/jsx-max-depth */
+import { CustomInput } from '@/components/form/custom-input';
+import FormWrapper from '@/components/form/form-wrapper';
+import { Button } from '@/components/shadcn/ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/shadcn/ui/card"
-import { Input } from "@/components/shadcn/ui/input"
-import { Label } from "@/components/shadcn/ui/label"
-import { Link } from "@/libs/next-intl"
-import { ROUTES } from "@/routes"
+} from '@/components/shadcn/ui/card';
+import { Input } from '@/components/shadcn/ui/input';
+import { Label } from '@/components/shadcn/ui/label';
+import { useRegistration } from '@/hooks/auth/registration';
+import { Link, useRouter } from '@/libs/next-intl';
+import { ROUTES } from '@/routes';
+import { signIn } from 'next-auth/react';
+import { z } from 'zod';
 
 export const description =
-  "A sign up form with first name, last name, email and password inside a card. There's an option to sign up with GitHub and a link to login if you already have an account"
+  "A sign up form with first name, last name, email and password inside a card. There's an option to sign up with GitHub and a link to login if you already have an account";
 
 export const RegistrationPage = () => {
+  const router = useRouter();
+  const { registerAsync } = useRegistration();
+
+  const handleRegistration = async (form: RegistrationFormType) => {
+    await registerAsync(
+      {
+        name: `${form.firstName} ${form.lastName}`,
+        email: form.email,
+        password: form.password,
+      },
+      {
+        onSuccess: async () => {
+          const result = await signIn('credentials', {
+            redirect: false, // We control the redirection manually
+            email: form.email,
+            password: form.password,
+          });
+
+          if (result?.error) {
+            // TODO: Add toast
+            // Handle error, show error message to the user
+            // setError("Invalid credentials. Please try again.");
+          } else {
+            // If successful, redirect to the desired page
+            router.push(ROUTES.DASHBOARD);
+          }
+        },
+        onError: () => {
+          // TODO: Add toast
+          // Handle error, show error message to the user
+          // setError("Invalid credentials. Please try again.");
+        },
+      },
+    );
+  };
+
+  const registrationFormSchema = z.object({
+    firstName: z.string().min(1),
+    lastName: z.string().min(1),
+    email: z.string().email(),
+    password: z.string().min(6),
+  });
+
+  type RegistrationFormType = z.infer<typeof registrationFormSchema>;
+
   return (
-    <Card className="mx-auto max-w-sm">
+    <Card className='mx-auto max-w-sm'>
       <CardHeader>
-        <CardTitle className="text-xl">Registration</CardTitle>
+        <CardTitle className='text-xl'>Registration</CardTitle>
         <CardDescription>
           Enter your information to create an account
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="grid gap-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="first-name">First name</Label>
-              <Input required id="first-name" placeholder="Max" />
+        <FormWrapper<RegistrationFormType, typeof registrationFormSchema>
+          schema={registrationFormSchema}
+          onSubmit={handleRegistration}
+        >
+          <div className='grid'>
+            <div className='grid grid-cols-2 gap-4'>
+              <CustomInput name='firstName' label='First name' type='text' />
+              <CustomInput name='lastName' label='Last name' type='text' />
             </div>
-            <div className="grid gap-2">
-              <Label htmlFor="last-name">Last name</Label>
-              <Input required id="last-name" placeholder="Robinson" />
-            </div>
+            <CustomInput name='email' label='Email' type='email' />
+            <CustomInput name='password' label='Password' type='password' />
+            <Button className='w-full' type='submit'>
+              Create an account
+            </Button>
           </div>
-          <div className="grid gap-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              required
-              id="email"
-              placeholder="m@example.com"
-              type="email"
-            />
+          <div className='mt-4 text-center text-sm'>
+            Already have an account?{' '}
+            <Link className='underline' href={ROUTES.LOGIN}>
+              Login.
+            </Link>
           </div>
-          <div className="grid gap-2">
-            <Label htmlFor="password">Password</Label>
-            <Input id="password" type="password" />
-          </div>
-          <Button className="w-full" type="submit">
-            Create an account
-          </Button>
-          <Button className="w-full" variant="outline">
-            Sign up with GitHub
-          </Button>
-        </div>
-        <div className="mt-4 text-center text-sm">
-          Already have an account?{" "}
-          <Link className="underline" href={ROUTES.LOGIN}>
-            Login.
-          </Link>
-        </div>
+        </FormWrapper>
       </CardContent>
     </Card>
-  )
-}
-export default RegistrationPage
+  );
+};
+export default RegistrationPage;

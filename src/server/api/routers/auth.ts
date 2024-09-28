@@ -1,6 +1,5 @@
 import { z } from "zod";
 import bcrypt from "bcryptjs";
-import { TRPCError } from "@trpc/server";
 import {
   createTRPCRouter,
   publicProcedure,
@@ -23,10 +22,10 @@ export const authRouter = createTRPCRouter({
       });
 
       if (existingUser) {
-        throw new TRPCError({
+        return {
           code: "CONFLICT",
           message: "User already exists",
-        });
+        };
       }
 
       // Hash the password

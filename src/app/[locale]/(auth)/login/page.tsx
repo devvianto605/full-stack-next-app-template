@@ -58,14 +58,15 @@ const LoginPage = () => {
     }
   };
 
-  const handleCredentialSignIn = async (email: string, password: string) => {
+  const handleCredentialSignIn = async (form: LoginFormType) => {
     const result = await signIn('credentials', {
       redirect: false, // We control the redirection manually
-      email,
-      password,
+      email: form.email,
+      password: form.password,
     });
 
     if (result?.error) {
+      // TODO: Add toast
       // Handle error, show error message to the user
       // setError("Invalid credentials. Please try again.");
     } else {
@@ -102,7 +103,7 @@ const LoginPage = () => {
             password: '12345678',
           }}
           schema={loginFormSchema}
-          onSubmit={(form) => handleCredentialSignIn(form.email, form.password)}
+          onSubmit={handleCredentialSignIn}
         >
           <div className='grid gap-2'>
             <CustomInput

@@ -36,14 +36,14 @@ export const authOptions: NextAuthOptions = {
 
       return token;
     },
-    session: ({ session, user }) => ({
+    session: ({ session, token }) => ({
       ...session,
       user: {
         ...session.user,
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        isGuest: user.isGuest || false, // Set isGuest flag
+        id: token.id,
+        name: token.name,
+        email: token.email,
+        isGuest: token.isGuest || false, // Set isGuest flag
       },
     }),
   },
