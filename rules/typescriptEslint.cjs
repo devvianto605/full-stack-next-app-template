@@ -39,7 +39,7 @@ module.exports = {
   '@typescript-eslint/ban-types': 'error',
   '@typescript-eslint/consistent-type-imports': 'error',
   '@typescript-eslint/consistent-indexed-object-style': 'error',
-  '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
+  '@typescript-eslint/consistent-type-definitions': ['warn', 'type'],
   '@typescript-eslint/consistent-type-exports': 'error',
   '@typescript-eslint/method-signature-style': 'error',
   '@typescript-eslint/no-empty-interface': 'error',

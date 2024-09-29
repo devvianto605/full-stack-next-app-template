@@ -11,7 +11,7 @@ module.exports = {
   // * Style and Formatting
   'react/self-closing-comp': ['error', { component: true, html: true }],
   'react/jsx-max-props-per-line': ['error', { maximum: 3, when: 'multiline' }],
-  'react/jsx-max-depth': ['error', { max: 5 }],
+  'react/jsx-max-depth': ['warn', { max: 6 }],
   'react/jsx-sort-props': [
     'error',
     { callbacksLast: true, shorthandFirst: true, reservedFirst: true },
