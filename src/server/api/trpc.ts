@@ -62,6 +62,7 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
  *
  * @see https://trpc.io/docs/server/server-side-calls
  */
+// eslint-disable-next-line prefer-destructuring
 export const createCallerFactory = t.createCallerFactory;
 
 /**
@@ -96,6 +97,7 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
   const result = await next();
 
   const end = Date.now();
+  // eslint-disable-next-line no-console
   console.log(`[TRPC] ${path} took ${end - start}ms to execute`);
 
   return result;
@@ -121,9 +123,11 @@ export const publicProcedure = t.procedure.use(timingMiddleware);
 export const protectedProcedure = t.procedure
   .use(timingMiddleware)
   .use(({ ctx, next }) => {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!ctx.session || !ctx.session.user) {
       throw new TRPCError({ code: "UNAUTHORIZED" });
     }
+
     return next({
       ctx: {
         // infers the `session` as non-nullable

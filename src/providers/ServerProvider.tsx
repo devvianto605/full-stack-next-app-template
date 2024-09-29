@@ -1,4 +1,4 @@
-import { Locale } from "@/libs/next-intl";
+import type { Locale } from "@/libs/next-intl";
 import { TRPCReactProvider } from "@/libs/trpc/react";
 import { NextIntlClientProvider, useMessages } from "next-intl";
 

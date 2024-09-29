@@ -10,10 +10,11 @@
     "db:push": "prisma db push",
     "db:studio": "prisma studio",
     "dev": "next dev",
+    "prepare": "husky install",
     "postinstall": "prisma generate && ./scripts/create-env.sh",
     "start-database": "./scripts/start-database.sh",
     "lint": "next lint",
-    "pre:commit": "npm run lint",
+    "pre:commit": "next lint",
     "start": "next start"
   },
   "dependencies": {

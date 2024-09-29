@@ -42,7 +42,7 @@ module.exports = {
   '@typescript-eslint/consistent-type-definitions': ['warn', 'type'],
   '@typescript-eslint/consistent-type-exports': 'error',
   '@typescript-eslint/method-signature-style': 'error',
-  '@typescript-eslint/no-empty-interface': 'error',
+  // '@typescript-eslint/no-empty-interface': 'error',
   '@typescript-eslint/no-extra-non-null-assertion': 'error',
   '@typescript-eslint/no-duplicate-type-constituents': 'error',
   '@typescript-eslint/no-inferrable-types': 'error',

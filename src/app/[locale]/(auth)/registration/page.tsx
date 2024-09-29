@@ -11,8 +11,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/shadcn/ui/card';
-import { Input } from '@/components/shadcn/ui/input';
-import { Label } from '@/components/shadcn/ui/label';
 import { useRegistration } from '@/hooks/auth/registration';
 import { Link, useRouter } from '@/libs/next-intl';
 import { ROUTES } from '@/routes';
@@ -83,11 +81,11 @@ export const RegistrationPage = () => {
         >
           <div className='grid'>
             <div className='grid grid-cols-2 gap-4'>
-              <CustomInput name='firstName' label='First name' type='text' />
-              <CustomInput name='lastName' label='Last name' type='text' />
+              <CustomInput label='First name' name='firstName' type='text' />
+              <CustomInput label='Last name' name='lastName' type='text' />
             </div>
-            <CustomInput name='email' label='Email' type='email' />
-            <CustomInput name='password' label='Password' type='password' />
+            <CustomInput label='Email' name='email' type='email' />
+            <CustomInput label='Password' name='password' type='password' />
             <Button className='w-full' type='submit'>
               Create an account
             </Button>

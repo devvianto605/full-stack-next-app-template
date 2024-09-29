@@ -1,3 +1,4 @@
+/* eslint-disable react/destructuring-assignment */
 "use client";
 
 import { QueryClientProvider, type QueryClient } from "@tanstack/react-query";
@@ -17,6 +18,7 @@ const getQueryClient = () => {
     return createQueryClient();
   }
   // Browser: use singleton pattern to keep the same query client
+  // eslint-disable-next-line @typescript-eslint/padding-line-between-statements
   return (clientQueryClientSingleton ??= createQueryClient());
 };
 
@@ -36,6 +38,7 @@ export type RouterInputs = inferRouterInputs<AppRouter>;
  */
 export type RouterOutputs = inferRouterOutputs<AppRouter>;
 
+// eslint-disable-next-line react/function-component-definition
 export function TRPCReactProvider(props: { children: React.ReactNode }) {
   const queryClient = getQueryClient();
 
@@ -49,10 +52,12 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
         }),
         unstable_httpBatchStreamLink({
           transformer: SuperJSON,
+          // eslint-disable-next-line @typescript-eslint/no-use-before-define, prefer-template
           url: getBaseUrl() + "/api/trpc",
           headers: () => {
             const headers = new Headers();
             headers.set("x-trpc-source", "nextjs-react");
+            // eslint-disable-next-line @typescript-eslint/padding-line-between-statements
             return headers;
           },
         }),
@@ -71,6 +76,8 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
 
 function getBaseUrl() {
   if (typeof window !== "undefined") return window.location.origin;
+  // eslint-disable-next-line @typescript-eslint/padding-line-between-statements
   if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+  // eslint-disable-next-line @typescript-eslint/padding-line-between-statements
   return `http://localhost:${process.env.PORT ?? 3000}`;
 }

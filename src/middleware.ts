@@ -5,8 +5,6 @@ import { NextResponse } from 'next/server';
 import { ROUTES } from '@/routes';
 import { defaultLocale, localePrefix, locales } from '@/libs/next-intl';
 import createIntlMiddleware from 'next-intl/middleware';
-import { getServerSession } from 'next-auth';
-
 
 const localeValidator = (locale: 'en' | 'th') => {
   return locales.includes(locale);
